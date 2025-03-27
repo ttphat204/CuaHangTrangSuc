@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewData["title"] Shop bán trang sức</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
+    <link href="~/css/prettyPhoto.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="~/css/price-range.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/main.css" rel="stylesheet">
+    <link href="~/css/responsive.css" rel="stylesheet">
+    <style>
+        header {
+            height: 130px;
+            background-color: #f0e68c; /* Màu xám nhạt */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s, padding 0.3s;
+        }
+
+            header.scrolled {
+                background-color: rgba(128, 128, 128, 0.6); /* Màu xám mờ mờ */
+                padding: 5px 0;
+                opacity: 0.9;
+            }
+
+        .navbar-brand1 img.logo-img {
+            width: 80px;
+            height: 80px;
+            padding: 0;
+        }
+
+        .navbar-nav .nav-link {
+            color: #333;
+            font-weight: 500;
+            font-size: 18px;
+            padding: 12px 18px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #007bff;
+            }
+
+            .navbar-nav .nav-link.active {
+                color: #007bff;
+                background-color: rgba(0, 123, 255, 0.1);
+                border-radius: 5px;
+            }
+
+            .navbar-nav .nav-link i {
+                margin-right: 8px;
+            }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .cart-link i {
+            margin-right: 8px;
+        }
+
+        .search-bar-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-bar {
+            max-width: 700px;
+            width: 100%;
+        }
+
+            .search-bar .input-group {
+                display: flex;
+                border-radius: 25px;
+                overflow: hidden;
+                background-color: #fff;
+                border: 1px solid #ced4da;
+                margin-left: 400px;
+            }
+
+                .search-bar .input-group .form-control {
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    background-color: transparent;
+                    width: 100%;
+                    box-shadow: none;
+                }
+
+                    .search-bar .input-group .form-control:focus {
+                        outline: none;
+                        box-shadow: none;
+                    }
+
+                .search-bar .input-group .btn {
+                    background-color: #007bff;
+                    color: #fff;
+                    border: none;
+                    padding: 10px 20px;
+                    transition: background-color 0.3s ease;
+                    border-radius: 0 25px 25px 0;
+                }
+
+                    .search-bar .input-group .btn i {
+                        font-size: 18px;
+                    }
+
+                    .search-bar .input-group .btn:hover {
+                        background-color: #0056b3;
+                    }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light" style="margin:0;">
+                <!-- Logo -->
+                <div class="logo" style="display:flex">
+                    <a class="navbar-brand1" href="/">
+                        @if (ViewBag.Contact != null && !string.IsNullOrEmpty(ViewBag.Contact.LogoImage))
+                        {
+                            <img src="~/media/logo/@ViewBag.Contact.LogoImage" alt="Logo" class="logo-img" />
+                        }
+                        else
+                        {
+                            <img src="~/media/logo/logoweb.jpg" alt="Logo" class="logo-img" />
+                        }
+                    </a>
+                    <ul class="navbar-nav user-menu">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                    <i class="fa fa-home"></i> Trang chủ
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="History" asp-controller="Account">
+                                    <i class="fa fa-user"></i> Tài khoản
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Wishlist" asp-controller="Home">
+                                    <i class="fa fa-heart"></i> Yêu thích
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Compare" asp-controller="Home">
+                                    <i class="fa fa-star"></i> So sánh
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link cart-link" asp-controller="Cart">
+                                    <i class="fa fa-shopping-cart"></i> Giỏ hàng
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Logout">
+                                    <i class="fa fa-sign-out"></i> Xin chào, @User.Identity.Name, Đăng xuất
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    <i class="fa fa-lock"></i> Đăng nhập
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link cart-link" asp-controller="Cart">
+                                    <i class="fa fa-shopping-cart"></i> Giỏ hàng
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- Search Bar -->
+                <form asp-controller="Product" asp-action="search" method="post" class="search-bar">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="searchTerm" placeholder="Tìm kiếm...">
+                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <section style="margin-top: 20px;">
+        <div class="container">
+            <div class="row">
+                @Html.Partial("_Notification")
+                @RenderBody()
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-top">
+            <div class="container">
+                <vc:footer></vc:footer>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+    <script>
+        $(function () {
+            var message = '@TempData["success"]';
+            if (message != '')
+                Swal.fire(message);
+
+            // Xử lý trạng thái active cho menu
+            const currentPath = window.location.pathname.toLowerCase();
+            $('.navbar-nav .nav-link').each(function () {
+                const linkPath = $(this).attr('href').toLowerCase();
+                if (currentPath === linkPath) {
+                    $(this).addClass('active');
+                }
+            });
+
+            // Xử lý khi nhấn vào mục menu
+            $('.navbar-nav .nav-link').on('click', function (e) {
+                $('.navbar-nav .nav-link').removeClass('active');
+                $(this).addClass('active');
+            });
+        });
+
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
